@@ -12,8 +12,8 @@ Podemos generar un archivo de hashes MD5 usando el metodo *getMD5Hashes()* este 
 include 'libraries/integrity.md5.class.php';
 $integrity = new integrity('./');
 $integrity->getMD5Hashes(); // archivo por defecto, por ejemplo: 20140316151603.md5
-// o
-$integruty->getMD5Hashes('MD5Check.md5'); // archivo personalizado.
+// or
+$integrity->getMD5Hashes('MD5Check.md5'); // archivo personalizado.
 ```
 
 Para realizar la comprobacion debemos usar el metodo *checkMD5Hashes()* al cual le pasaremos el archivo con los hashes MD5 con los que deseemos realizar la comparacion.
