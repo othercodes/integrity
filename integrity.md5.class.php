@@ -35,16 +35,19 @@ class integrity {
             return FALSE;
         }
         $file = file($file);
+        $hashes = array();
         foreach ($file as $line) {
             $temp = explode(' ', $line);
-            $hashes[] = array('file' => $temp[0], 'md5' => trim($temp[1]));
+            $hashes[trim($temp[1])] = $temp[0];
         }
         $modifies = array();
-        foreach($this->_tree as $currentHash){
-            foreach($hashes as $storeHash){
-                if($currentHash['file'] == $storeHash['file'] && $currentHash['md5'] != $storeHash['md5']){
-                    $modifies[] = $this->getFileStats($currentHash['file']);
+        foreach($this->_tree as $current){
+            if(array_key_exists($current['file'], $hashes)){
+                if($hashes[$current['file']] != $current['md5']){
+                    $modifies[] = $this->getFileStats($current['file'],'changed');
                 }
+            } else {
+                $modifies[] = $this->getFileStats($current['file'],'added');
             }
         }
         return $modifies; 
@@ -62,7 +65,7 @@ class integrity {
         }
         $hashes = '';
         foreach ($this->_tree as $value){
-            $hashes .= $value['file']." ".$value['md5']."\n";
+            $hashes .= $value['md5']." ".$value['file']."\n";
         }
         return file_put_contents($file, $hashes);
     }
@@ -87,8 +90,8 @@ class integrity {
                     $this->getFileList($path.$entry."/");
                 } else {
                     $this->_tree[] = array(
-                        'file' => $path.$entry, 
-                        'md5' => md5_file($path.$entry)
+                        'md5' => md5_file($path.$entry),
+                        'file' => str_replace($this->_path,"",$path.$entry)
                     );
                 }
             } 
@@ -102,12 +105,12 @@ class integrity {
      * @param string $file
      * @return array
      */
-    private function getFileStats($file){
-        if(is_readable($file)) {
-            $mdata = stat($file);
+    private function getFileStats($file,$stat){
+        if(is_readable($this->_path.$file)) {
+            $mdata = stat($this->_path.$file);
             return array(
                 'filename' => $file,
-                'md5Hash' => md5_file($file),
+                'stat' => $stat,
                 'uid' => $mdata[4], 
                 'gid' => $mdata[5], 
                 'size' => $mdata[7],
