@@ -31,11 +31,15 @@ class integrity {
      * @return array 
      */
     public function checkMD5Hashes($file){
+        if (!is_readable($file)) {
+            return FALSE;
+        }
         $file = file($file);
         foreach ($file as $line) {
             $temp = explode(' ', $line);
             $hashes[] = array('file' => $temp[0], 'md5' => trim($temp[1]));
         }
+        $modifies = array();
         foreach($this->_tree as $currentHash){
             foreach($hashes as $storeHash){
                 if($currentHash['file'] == $storeHash['file'] && $currentHash['md5'] != $storeHash['md5']){
@@ -43,7 +47,7 @@ class integrity {
                 }
             }
         }
-        return $modifies;
+        return $modifies; 
     }   
     
     /**
@@ -52,12 +56,15 @@ class integrity {
      * @param string $file
      * @return boolean
      */
-    public function getMD5Hashes($file){
-        $hashes = "";
+    public function getMD5Hashes($file = null){
+        if(!isset($file)){
+            $file = date('YmdHis').".md5";
+        }
+        $hashes = '';
         foreach ($this->_tree as $value){
             $hashes .= $value['file']." ".$value['md5']."\n";
         }
-        return file_put_contents($file."_".date('YmdHis'), $hashes);
+        return file_put_contents($file, $hashes);
     }
     
     /**
