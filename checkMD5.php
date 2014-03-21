@@ -9,7 +9,7 @@
         <?php
         include 'libraries/integrity.md5.class.php';
         $integrity = new integrity('./');
-        $files = $integrity->checkMD5Hashes('20140316151603.md5');
+        $files = $integrity->checkMD5Hashes('hash.md5');
         ?>
         <h2>Modified Files</h2>
         <table>
