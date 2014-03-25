@@ -16,7 +16,7 @@
             <thead>
                 <tr>
                     <th>File</th>
-                    <th>MD5Hass</th>
+                    <th>State</th>
                     <th>User ID</th>
                     <th>Group ID</th>
                     <th>Last Access</th>
@@ -27,7 +27,7 @@
             <?php foreach($files as $file) { ?>
                 <tr>
                     <td><?php echo $file['filename']; ?></td>
-                    <td><?php echo $file['md5Hash']; ?></td>
+                    <td><?php echo $file['stat']; ?></td>
                     <td><?php echo $file['uid']; ?></td>
                     <td><?php echo $file['gid']; ?></td>
                     <td><?php echo $file['lastAccess']; ?></td>
