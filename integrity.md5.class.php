@@ -21,7 +21,7 @@ class integrity {
         } else {
             $this->_path = $path;
         }
-        $this->getFileList();
+        $this->_getFileList();
     }
     
     /**
@@ -41,15 +41,28 @@ class integrity {
             $hashes[trim($temp[1])] = $temp[0];
         }
         $modifies = array();
-        foreach($this->_tree as $current){
-            if(array_key_exists($current['file'], $hashes)){
-                if($hashes[$current['file']] != $current['md5']){
-                    $modifies[] = $this->getFileStats($current['file'],'changed');
-                }
-            } else {
-                $modifies[] = $this->getFileStats($current['file'],'added');
+        
+        /* busca los archivos añadidos */
+        foreach($this->_tree as $key => $value){
+            if(!array_key_exists($key, $hashes)) {
+                $modifies[] = $this->_getFileStats($key,'added');  
             }
         }
+        /* busca archivos eliminados */
+        foreach($hashes as $key => $value){            
+            if(!array_key_exists($key, $this->_tree)) {
+                $modifies[] = $this->_reportFileMissing($key); 
+            }
+        }
+        /* busca archivos modificados */
+        foreach($this->_tree as $key => $value){
+            if(array_key_exists($key, $hashes)) {
+                if($value != $hashes[$key]){
+                    $modifies[] = $this->_getFileStats($key,'modified');
+                }
+            }
+        }
+        
         return $modifies; 
     }   
     
@@ -64,8 +77,8 @@ class integrity {
             $file = date('YmdHis').".md5";
         }
         $hashes = '';
-        foreach ($this->_tree as $value){
-            $hashes .= $value['md5']." ".$value['file']."\n";
+        foreach ($this->_tree as $key => $value){
+            $hashes .= $value." ".$key."\n";
         }
         return file_put_contents($file, $hashes);
     }
@@ -76,7 +89,7 @@ class integrity {
      * @param string $path
      * @return boolean
      */
-    private function getFileList($path = null){
+    private function _getFileList($path = null){
         if(!$path){
             $path = $this->_path;
         }
@@ -85,14 +98,11 @@ class integrity {
         }
         $root = opendir($path);
         while($entry = readdir($root)) {
-            if ($entry != "." && $entry != "..") {
+            if ($entry != "." && $entry != ".." && $entry != 'JShield') {
                 if (is_dir($path.$entry)){
-                    $this->getFileList($path.$entry."/");
+                    $this->_getFileList($path.$entry."/");
                 } else {
-                    $this->_tree[] = array(
-                        'md5' => md5_file($path.$entry),
-                        'file' => str_replace($this->_path,"",$path.$entry)
-                    );
+                    $this->_tree[str_replace($this->_path,"",$path.$entry)] = md5_file($path.$entry);
                 }
             } 
         }
@@ -105,7 +115,7 @@ class integrity {
      * @param string $file
      * @return array
      */
-    private function getFileStats($file,$stat){
+    private function _getFileStats($file,$stat){
         if(is_readable($this->_path.$file)) {
             $mdata = stat($this->_path.$file);
             return array(
@@ -115,8 +125,25 @@ class integrity {
                 'gid' => $mdata[5], 
                 'size' => $mdata[7],
                 'lastAccess' => date('Y-m-d H:i:s',$mdata[8]),
-                'lastModification' => date('Y-m-d H:i:s',$mdata[9]),
+                'lastModification' => date('Y-m-d H:i:s',$mdata[9])
             ); 
         }
+    }
+    
+    /**
+     * Declara un archivo como eliminado 
+     * @params string $file
+     * @return array
+     */
+    private function _reportFileMissing($file){
+        return array(
+            'filename' => $file,
+            'stat' => 'deleted',
+            'uid' => null, 
+            'gid' => null, 
+            'size' => null,
+            'lastAccess' => null,
+            'lastModification' => null
+        );
     }
 }
