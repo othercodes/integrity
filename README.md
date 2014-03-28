@@ -25,4 +25,4 @@ $files = $integrity->checkMD5Hashes('MD5Check.md5');
 var_dump($files);
 ```
 Nos devolvera un array con la lista de los archivos que an sufrido cambios.
-<h2>555</h2>
+
