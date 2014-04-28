@@ -21,7 +21,7 @@ Para realizar la comprobacion debemos usar el metodo *checkMD5Hashes()* al cual 
 ```php
 include 'libraries/integrity.md5.class.php';
 $integrity = new integrity('path/to/folder/');
-$files = $integrity->checkMD5Hashes('MD5Check.md5');
+$files = $integrity->checkMD5Hashes();
 var_dump($files);
 ```
 Nos devolvera un array con la lista de los archivos que an sufrido cambios.
