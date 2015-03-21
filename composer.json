@@ -1,0 +1,18 @@
+{
+    "name": "slavepens/integrity",
+    "type": "library",
+    "description": "Integrity permite verificar la integridad de los archivos del sistema.",
+    "authors": [
+        {
+            "name": "David Unay Santisteban",
+            "email": "slavepens@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "classmap": ["integrity.md5.class.php"]
+    },
+    "license": "GPLv3"
+}
