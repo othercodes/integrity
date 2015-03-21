@@ -14,5 +14,6 @@
     "autoload": {
         "classmap": ["integrity.md5.class.php"]
     },
-    "license": "GPLv3"
+    "license": "GPLv3",
+    "minimum-stability": "dev"
 }
