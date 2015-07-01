@@ -1,4 +1,4 @@
-<?php
+<?php namespace Integrity;
 /**
  * Verifica si los archivos de un directorio han sido alterados.
  * @author David Unay Santisteban <slavepens@gmail.com>
@@ -6,7 +6,7 @@
  * @copyright (c) 2014, David Unay Santisteban
  * @license http://www.gnu.org/licenses/gpl.txt GPLv3 
  */
-class integrity {
+class Integrity {
     
     protected $_path;
     protected $_tree = array();

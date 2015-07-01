@@ -7,8 +7,8 @@
     </head>
     <body>
         <?php
-        include 'libraries/integrity.md5.class.php';
-        $integrity = new integrity('path/to/check/directory');
+        include '../Integrity.php';
+        $integrity = new Integrity('path/to/check/directory');
         $files = $integrity->checkMD5Hashes('hash.md5');
         ?>
         <h2>Modified Files</h2>

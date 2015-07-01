@@ -1,5 +1,5 @@
 <?php
-include 'libraries/integrity.md5.class.php';
+include '../Integrity.php';
 
 $integrity = new integrity('path/to/check/directory');
 
